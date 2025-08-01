@@ -10,7 +10,7 @@ export default function IMCResultado({ resultado }: Props) {
   return (
     <View style={styles.contenedor}>
       <Text style={styles.texto}>IMC: {resultado.valor.toFixed(2)}</Text>
-      <Text style={styles.texto}>Clasificación: {resultado.categoria}</Text>
+      <Text style={styles.texto}>Clasificacion: {resultado.categoria}</Text>
     </View>
   );
 }
