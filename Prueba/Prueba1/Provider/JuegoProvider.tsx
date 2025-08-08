@@ -38,7 +38,7 @@ export default function JuegoProvider({ children }: Plantilla) {
       setTimeout(() => {
         if (carta1.valor === carta2.valor) {
           alert("He ganado el Juego");
-          setPartidas((prev) => [...prev, "Ganó"]);
+          setPartidas((prev) => [...prev, "Gano"]);
         } else {
           alert("Las Cartas no son iguales");
           setPartidas((prev) => [...prev, "Perdio"]);
