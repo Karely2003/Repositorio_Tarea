@@ -7,41 +7,32 @@ interface plantilla{
     children:ReactNode
 }
 
-export default function ProviderTransferencia() {
-  return (
-    <View>
-      <Text>ProviderTransferencia</Text>
-    </View>
-  )
-}
+export default function ProviderTransferencia({children}:plantilla) {
+    
+const [saldo, setSaldo] = useState(10000);
+  const [transferencias, setTransferencias] = useState<string[]>([]);
 
-
-
-
-import { View, Text } from 'react-native'
-import React, { ReactNode, useContext, useState } from 'react'
-import { Tarea } from '../Modelos/Tarea'
-import {contextTarea} from '../contex/ContextTarea'
-
-interface plantilla{
-    children:ReactNode
-}
-
-export default function ProviderTarea({children}:plantilla) {
-  const [tarea,setTarea]=useState<Tarea[]>([]);
-
-  function agregarTareas(tarea:Tarea){
-    setTarea(item=>[...item,tarea])
+  function depositar() {
+    setSaldo(prev => prev + 500);
+    setTransferencias(prev => [...prev, 'Deposito de L.500']);
   }
 
+  function transferir(monto: number, descripcion: string) {
+    if (monto <= saldo) {
+      setSaldo(prev => prev - monto);
+      setTransferencias(prev => [...prev, descripcion]);
+      return true;
+    }
+    return false;
+  }
 
   return (
-    <contextTarea.Provider value={{tarea,agregarTareas}}>
-        {children}
-    </contextTarea.Provider>
-  )
+    <ContextTransferencia.Provider value={{ saldo, transferencias, depositar, transferir }}>
+      {children}
+    </ContextTransferencia.Provider>
+  );
 }
 
-export function useContextTarea(){
-    return useContext(contextTarea)
+export function useContextTransferencia() {
+  return useContext(ContextTransferencia);
 }
