@@ -1,6 +1,9 @@
 import { View, Text, TextInput, Button, Alert } from 'react-native'
 import React, {useState} from 'react'
 import {productos} from '../Modelos/productos'
+import * as ImagePicker from 'expo-image-picker'
+import { Picker } from '@react-native-picker/picker'
+
 
 export default function Agregarproductos() {
 
@@ -22,7 +25,7 @@ export default function Agregarproductos() {
             urlfotografia
         }
 
-        const respuesta = await fetch('http://192.168.0.7:5000/productos', {
+        const respuesta = await fetch('http://localhost:5000/productos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -33,53 +36,75 @@ export default function Agregarproductos() {
         const respuestaApi = await respuesta.json()
 
         if (respuestaApi) {
-           Alert.alert('Producto agregado correctamente')
+           Alert.alert('Producto agregado')
         } else {
-           Alert.alert('Ocurrió un error al agregar el producto')
+           Alert.alert('ocurrio un error')
         }
+
     }
+
+        async function fototomar() {
+            const result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                quality: 1
+            })
+
+            if (!result.canceled){
+                const uri = result.assets[0].uri
+                setUrlfotografia(uri)
+                Alert.alert('fotografia tomada')
+
+            }
+                
+            
+        }
+
+
+
 
   return (
     <View>
         <Text>Agregar Producto</Text>
 
-        <TextInput placeholder='Nombre'
-            value={nombre}
-            onChangeText={setNombre}
-        ></TextInput>
+            <TextInput placeholder='Nombre'
+                value={nombre}
+                onChangeText={setNombre}
+            ></TextInput>
 
-        <TextInput placeholder='Descripción'
-            value={descripcion}
-            onChangeText={setDescripcion}
-        ></TextInput>
+            <TextInput placeholder='Descripción'
+                value={descripcion}
+                onChangeText={setDescripcion}
+            ></TextInput>
 
-        <TextInput placeholder='Precio'
-            value={precio}
-            onChangeText={setPrecio}
-            keyboardType='numeric'
-        ></TextInput>
+            <TextInput placeholder='Precio'
+                value={precio}
+                onChangeText={setPrecio}
+                keyboardType='numeric'
+            ></TextInput>
 
-        <TextInput placeholder='Estado (Disponible / No disponible)'
-            value={estado}
-            onChangeText={(text) => setEstado(text === 'No disponible' ? 'No disponible' : 'Disponible')}
-        ></TextInput>
+            <Text>Selecciona Estado</Text>
+                <Picker selectedValue={estado} onValueChange={(value) => setEstado(value)}>
+                    <Picker.Item label="Disponible" value="Disponible"></Picker.Item>
+                    <Picker.Item label="No disponible" value="No disponible" ></Picker.Item>
+                </Picker>
 
-        <TextInput placeholder='Categoría (calzado / vestidos / accsesorios)'
-            value={categoria}
-            onChangeText={(text) => {
-              if (['calzado', 'vestidos', 'accsesorios'].includes(text)) {
-                setCategoria(text as any)
-            }
-            }
-        }
-        ></TextInput>
+            <Text>Selecciona Categoria</Text>
+            <Picker selectedValue={categoria} onValueChange={(value) => setCategoria(value)}>
+                <Picker.Item label="Calzado" value="calzado" />
+                <Picker.Item label="Vestidos" value="vestidos" />
+                <Picker.Item label="Accesorios" value="accsesorios" />
+            </Picker>
 
-        <TextInput placeholder='URL de fotografía'
-            value={urlfotografia}
-            onChangeText={setUrlfotografia}
-        ></TextInput>
+            
 
-         <Button title='Agregar Producto' onPress={agregarProducto}></Button>
+
+            <Button title="foto item" onPress={fototomar}></Button>
+
+                {urlfotografia && (
+                <Image source={{ uri: urlfotografia }} style={{ width: 200, height: 200, marginVertical: 10 }}></Image>
+                )}
+            <Button title='guardar' onPress={agregarProducto}></Button>
+            
     </View>
   )
 }

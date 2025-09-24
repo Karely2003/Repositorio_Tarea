@@ -22,6 +22,10 @@ const productos = sequelize.define('productos',{
     },
     categoria:{
         type:DataTypes.ENUM('calzado', 'vestidos', 'accesorios')
+    },
+    urlfotografia:{
+        type:DataTypes.STRING(300)
+
     }
     
 

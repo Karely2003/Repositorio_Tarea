@@ -5,6 +5,10 @@ const app= express()
 
 app.use(express.json());
 
+const cors = require('cors')
+app.use(cors())
+
+
 
 app.get('/productos', async (req, resp) => {
     try {
